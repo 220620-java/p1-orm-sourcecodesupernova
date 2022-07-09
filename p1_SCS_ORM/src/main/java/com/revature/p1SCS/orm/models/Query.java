@@ -1,4 +1,4 @@
-package p1_SCS_ORM;
+package com.revature.p1SCS.orm.models;
 
 import java.util.ArrayList;
 import java.util.List;
