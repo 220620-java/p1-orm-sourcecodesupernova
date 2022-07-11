@@ -17,9 +17,9 @@ public class Query {
 	private List<String> foreignReferenceList = new ArrayList<>(); //This will be parallel with the others as well. Set to null if the field does not reference a foreign table
 	
 	/*Where Clause Variables*/
-	private List<String> fieldFilterByList = new ArrayList<>();
-	private List<String> fieldFilterValueList = new ArrayList<>();
-	private List<String> argumentType = new ArrayList<>(); //Will be LIKE, >, <, >=, <=, ==
+	private List<String> filterList = new ArrayList<>();
+	private List<String> filterValueList = new ArrayList<>();
+	private List<String> argumentTypes = new ArrayList<>(); //Will be LIKE, >, <, >=, <=, == 
 	
 	/*Getters, Setters. Adders*/
 	public String getTableName() {
@@ -79,26 +79,26 @@ public class Query {
 	}
 	
 	public List<String> getFieldFilterByList() {
-		return fieldFilterByList;
+		return filterList;
 	}
 	
-	public void setFieldFilterByList(List<String> fieldFilterByList) {
-		this.fieldFilterByList = fieldFilterByList;
+	public void setFilterList(List<String> filterList) {
+		this.filterList = filterList;
 	}
 	
 	public List<String> getFieldFilterValueList() {
-		return fieldFilterValueList;
+		return filterValueList;
 	}
 	
-	public void setFieldFilterValueList(List<String> fieldFilterValueList) {
-		this.fieldFilterValueList = fieldFilterValueList;
+	public void setFilterValueList(List<String> filterValueList) {
+		this.filterValueList = filterValueList;
 	}
 	
-	public List<String> getArgumentType() {
-		return argumentType;
+	public List<String> getArgumentTypes() {
+		return argumentTypes;
 	}
 	
-	public void setArgumentType(List<String> argumentType) {
-		this.argumentType = argumentType;
+	public void setArgumentTypes(List<String> argumentType) {
+		this.argumentTypes = argumentType;
 	}
 }
