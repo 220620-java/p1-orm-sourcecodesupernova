@@ -12,8 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.InjectMocks;
+import com.revature.p1SCS.orm.models.Query;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class ORMUpdateTest {
+	Query testObj = new Query();
 }
