@@ -4,7 +4,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ORMInsert implements ORMInterface{/*Class Variables*/
+public class ORMInsert implements ORMInterface{
+	/*Class Variables*/
 	private Object obj = null;
 	private Class objClass = null;
 	
@@ -47,7 +48,6 @@ public class ORMInsert implements ORMInterface{/*Class Variables*/
 			
 			sql += "VALUES(";
 			index = 0;
-			
 			for (String s: values) {
 				sql += s;
 				if(index == (values.size() - 1)) {
