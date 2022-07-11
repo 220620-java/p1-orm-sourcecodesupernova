@@ -3,9 +3,9 @@ package com.revature.p1SCS.orm.services;
 public class ORMUpdate implements ORMInterface{
 
 	@Override
-	public void makeSQLStatement() {
-		// TODO Auto-generated method stub
-		
+	public String makeSQLStatement(Object obj) {
+		String sql = "UPDATE ";
+		return sql;
 	}
 
 }
