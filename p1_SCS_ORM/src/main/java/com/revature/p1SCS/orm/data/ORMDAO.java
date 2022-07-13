@@ -37,6 +37,7 @@ public class ORMDAO {
 		}
 		catch (Exception e){
 			//TODO Exception Logger
+			e.printStackTrace();
 		}
 		/*Return*/
 		return result;
@@ -57,6 +58,7 @@ public class ORMDAO {
 		}
 		catch (Exception e){
 			//TODO Exception Logger
+			e.printStackTrace();
 		}
 		/*Return*/
 		return result;
@@ -69,7 +71,7 @@ public class ORMDAO {
 		int columns = 0;
 		ResultSet result = null;
 		ResultSetMetaData resMeta = null;
-		List<Query> objList = new ArrayList<>();
+		List<Query> objList = null;
 		List<String> fields = new ArrayList<>(),
 				values = new ArrayList<>();;
 		Query in = null;
@@ -79,6 +81,7 @@ public class ORMDAO {
 			sql = ormSel.makeSQLStatement(obj);
 			PreparedStatement stmt =  conn.prepareStatement(sql);
 			result = stmt.executeQuery();
+			objList = new ArrayList<>();
 			
 			//Getting field names
 			resMeta = result.getMetaData();
