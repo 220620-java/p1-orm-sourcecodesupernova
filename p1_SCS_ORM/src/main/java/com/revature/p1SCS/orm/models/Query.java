@@ -78,7 +78,7 @@ public class Query {
 		this.foreignReferenceList = foreignReferenceList;
 	}
 	
-	public List<String> getFieldFilterByList() {
+	public List<String> getFilterList() {
 		return filterList;
 	}
 	
@@ -86,7 +86,7 @@ public class Query {
 		this.filterList = filterList;
 	}
 	
-	public List<String> getFieldFilterValueList() {
+	public List<String> getFilterValueList() {
 		return filterValueList;
 	}
 	
