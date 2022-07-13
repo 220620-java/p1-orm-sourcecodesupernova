@@ -8,10 +8,6 @@ public class ORMUpdate implements ORMInterface{
 	/*Class Variables*/
 	private Object obj = null;
 	private Class objClass = null;
-	
-	private void runSQLStatement(String sql) {
-		//TODO DataAccessObjects, Database
-	}
 
 	@Override
 	/*Writes a SQL create statement based on the object's fields*/
@@ -53,7 +49,7 @@ public class ORMUpdate implements ORMInterface{
 			index = 0;
 			for (String s : filters) {
 				sql += s + " " + argTypes.get(index) + " '"+ filterValues.get(index) + "'";
-				if (index != (fields.size() - 1)) {
+				if (index != (filters.size() - 1)) {
 					sql += " AND ";
 				}
 				index++;

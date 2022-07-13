@@ -8,10 +8,6 @@ public class ORMInsert implements ORMInterface{
 	/*Class Variables*/
 	private Object obj = null;
 	private Class objClass = null;
-	
-	private void runSQLStatement(String sql) {
-		//TODO DataAccessObjects, Database
-	}
 
 	@Override
 	/*Writes a SQL create statement based on the object's fields*/
@@ -51,7 +47,7 @@ public class ORMInsert implements ORMInterface{
 			for (String s: values) {
 				sql += s;
 				if(index == (values.size() - 1)) {
-					sql += "); ";
+					sql += ");";
 				}
 				else{
 					sql += ", ";

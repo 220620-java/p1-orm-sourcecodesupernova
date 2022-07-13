@@ -106,6 +106,7 @@ public class ORMDAO {
 		}
 		catch (Exception e){
 			//TODO Exception Logger
+			objList = null;
 		}
 		/*Return*/
 		return objList;
