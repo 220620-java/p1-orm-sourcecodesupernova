@@ -2,7 +2,10 @@ package com.revature.p1SCS.orm.services;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Stream;
 
 public class ORMUpdate implements ORMInterface{
 	/*Class Variables*/
@@ -53,11 +56,12 @@ public class ORMUpdate implements ORMInterface{
 			index = 0;
 			for (String s : filters) {
 				sql += s + " " + argTypes.get(index) + " '"+ filterValues.get(index) + "'";
-				if (index != (fields.size() - 1)) {
+				if (index != (filters.size() - 1)) {
 					sql += " AND ";
 				}
 				index++;
 			}
+			sql += ";";
 			
 		}
 		catch (Exception e) {

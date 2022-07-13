@@ -9,6 +9,11 @@ public class ORMCreate implements ORMInterface{
 	private Object obj = null;
 	private Class objClass = null;
 	
+	/**
+	 * Passes sql statement to database through DAO? //update if I'm wrong -Devin
+	 * 
+	 * @param sql sql statement being passed to DAO
+	 */
 	private void runSQLStatement(String sql) {
 		//TODO DataAccessObjects, Database
 	}

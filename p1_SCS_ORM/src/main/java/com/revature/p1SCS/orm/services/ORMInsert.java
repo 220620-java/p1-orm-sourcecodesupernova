@@ -51,7 +51,7 @@ public class ORMInsert implements ORMInterface{
 			for (String s: values) {
 				sql += s;
 				if(index == (values.size() - 1)) {
-					sql += "); ";
+					sql += ");";
 				}
 				else{
 					sql += ", ";
