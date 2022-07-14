@@ -9,10 +9,6 @@ public class ORMSelect implements ORMInterface{
 	private Object obj = null;
 	private Class objClass = null;
 	
-	private void runSQLStatement(String sql) {
-		//TODO DataAccessObjects, Database
-	}
-	
 	@Override
 	public String makeSQLStatement(Object obj) {
 		String sql = "SELECT ";
@@ -59,13 +55,22 @@ public class ORMSelect implements ORMInterface{
 			
 		}
 		catch(Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		
 		
 		return sql;
 	}
 	
+	/**
+	 * Retrieves table name of the object accessed through reflection
+	 * 
+	 * @return a String of the table name
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	protected String getTableName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field tableName = objClass.getDeclaredField("tableName");
@@ -79,6 +84,15 @@ public class ORMSelect implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves fields of the object class through reflection
+	 * 
+	 * @return a List of the fields contained in the object class
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	protected List<String> getFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field fieldNameList = objClass.getDeclaredField("fieldNameList");
@@ -92,6 +106,15 @@ public class ORMSelect implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves filters used for conditions in the SQL statement
+	 * 
+	 * @return a List of filters used for the WHERE/AND clause
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	protected List<String> getFilters() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field filterList = objClass.getDeclaredField("filterList");
@@ -105,6 +128,16 @@ public class ORMSelect implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves conditional operations used for conditions in
+	 * the SQL statement such as (>, <, ==, >=, <=)
+	 * 
+	 * @return a List of conditional operators used in the SQL statement
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	protected List<String> getArgTypes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field argumentTypes = objClass.getDeclaredField("argumentTypes");
@@ -118,6 +151,15 @@ public class ORMSelect implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves values used for conditionals in the SQL statement
+	 * 
+	 * @return a List of values used in filter conditions
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	protected List<String> getFilterValues() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field filterValueList = objClass.getDeclaredField("filterValueList");
@@ -131,10 +173,21 @@ public class ORMSelect implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * The object whose class is being accessed and mapped to a
+	 * relational database
+	 * 
+	 * @param obj The object whose class is being accessed
+	 */
 	public void setObj(Object obj) {
 		this.obj = obj;
 	}
 	
+	/**
+	 * The object's class that is being accessed through reflection
+	 * 
+	 * @param objClass The class of the object being accessed through reflection
+	 */
 	public void setObjClass(Class objClass) {
 		this.objClass = objClass;
 	}
