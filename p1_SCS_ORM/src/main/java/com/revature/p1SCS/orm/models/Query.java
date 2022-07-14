@@ -5,21 +5,24 @@ import java.util.List;
 
 public class Query {
 	/*General Variables*/
-	//All of the lists are meant to be parallel arrays. So when you set the value for one, make sure to set the others as well, even if its null
-	private String tableName = "";
-	private String queryType = ""; //Will be SELECT, CREATE, UPDATE, DELETE
-	private List<String> fieldNameList = new ArrayList<>();
-	private List<String> fieldTypeList = new ArrayList<>();
-	private List<String> fieldValueList = new ArrayList<>();
-	private List<String> fieldModifiersList = new ArrayList<>(); //Will be a string of identifiers. 'p' for PK, 'u' for unique, 'n' for not null, 'f' for FK
+	//All of the lists are meant to be parallel arrays. So when you set the value for one, make sure to set the others as well, even if its new ArrayList<>()
+	private String tableName = "",
+			queryType = ""; //Will be SELECT, CREATE, UPDATE, DELETE
+	private List<String> fieldNameList = new ArrayList<>(),
+			fieldTypeList = new ArrayList<>(),
+			fieldValueList = new ArrayList<>(),
+			fieldModifiersList = new ArrayList<>(); //Will be a string of identifiers. 'p' for PK, 'u' for unique, 'n' for not new ArrayList<>(), 'f' for FK
+	
+	/*Insert Statement Variables*/
+	private String[] keys = null;
 	
 	/*Create Statement Variables*/	
-	private List<String> foreignReferenceList = new ArrayList<>(); //This will be parallel with the others as well. Set to null if the field does not reference a foreign table
+	private List<String> foreignReferenceList = new ArrayList<>(); //This will be parallel with the others as well. Set to new ArrayList<>() if the field does not reference a foreign table
 	
 	/*Where Clause Variables*/
-	private List<String> filterList = new ArrayList<>();
-	private List<String> filterValueList = new ArrayList<>();
-	private List<String> argumentTypes = new ArrayList<>(); //Will be LIKE, >, <, >=, <=, == 
+	private List<String> filterList = new ArrayList<>(),
+			filterValueList = new ArrayList<>(),
+			argumentTypes = new ArrayList<>(); //Will be LIKE, >, <, >=, <=, == 
 	
 	/*Getters, Setters. Adders*/
 	public String getTableName() {
@@ -101,4 +104,14 @@ public class Query {
 	public void setArgumentTypes(List<String> argumentType) {
 		this.argumentTypes = argumentType;
 	}
+	
+
+	public String[] getKeys() {
+		return keys;
+	}
+	
+	public void setKeys(String[] keys) {
+		this.keys = keys;
+	}
+	
 }
