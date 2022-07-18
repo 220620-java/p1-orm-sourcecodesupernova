@@ -17,6 +17,7 @@ public class ORMInsert implements ORMInterface{
 		String table = "";
 		int index = 0;
 		List<String> fields = new ArrayList<>(),
+				keys = new ArrayList<>(),
 				values = new ArrayList<>();
 		
 		/*Function*/
@@ -24,6 +25,7 @@ public class ORMInsert implements ORMInterface{
 			//Setting Variables
 			setObj(o);
 			setObjClass(o.getClass());
+			keys = getKeys();
 			table = getTableName();
 			fields = getFields();
 			values = getValues();
@@ -45,7 +47,12 @@ public class ORMInsert implements ORMInterface{
 			sql += "VALUES(";
 			index = 0;
 			for (String s: values) {
-				sql += s;
+				if (keys.contains(fields.get(index))) { //The field is meant to be set automatically
+					sql += "default";
+				}
+				else {
+					sql += "'" + s + "'";
+				}
 				if(index == (values.size() - 1)) {
 					sql += ");";
 				}
@@ -56,11 +63,30 @@ public class ORMInsert implements ORMInterface{
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			//TODO Exception logger
 		}
 		
 		/*Return*/
 		return sql;
+	}
+	
+	protected List<String> getKeys() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+		Field keys = objClass.getDeclaredField("keys");
+		String[] value = {""};
+		List<String> result = new ArrayList<>();
+		
+		/*Function*/
+		keys.setAccessible(true);
+		value = (String[]) keys.get(obj);
+		
+		for (String s : value) {
+			result.add(s);
+		}
+		
+		/*Return*/
+		return result;
 	}
 	
 	protected String getTableName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {

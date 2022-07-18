@@ -47,12 +47,13 @@ public class ORMDAO {
 	public int insert(Query obj) {
 		/*Local Variables*/
 		String sql = "";
+		String[] keys = obj.getKeys();
 		int result = -1;
 		
 		/*Function*/
 		try (Connection conn = sqlConn.getConnection()){
 			sql = ormIns.makeSQLStatement(obj);
-			PreparedStatement stmt =  conn.prepareStatement(sql);
+			PreparedStatement stmt =  conn.prepareStatement(sql, keys);
 			result = stmt.executeUpdate();
 			conn.close();
 		}
