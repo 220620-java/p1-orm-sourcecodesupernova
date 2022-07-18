@@ -6,8 +6,7 @@ import java.util.List;
 public class Query {
 	/*General Variables*/
 	//All of the lists are meant to be parallel arrays. So when you set the value for one, make sure to set the others as well, even if its new ArrayList<>()
-	private String tableName = "",
-			queryType = ""; //Will be SELECT, CREATE, UPDATE, DELETE
+	private String tableName = "";
 	private List<String> fieldNameList = new ArrayList<>(),
 			fieldTypeList = new ArrayList<>(),
 			fieldValueList = new ArrayList<>(),
@@ -31,14 +30,6 @@ public class Query {
 	
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
-	}
-	
-	public String getQueryType() {
-		return queryType;
-	}
-	
-	public void setQueryType(String queryType) {
-		this.queryType = queryType;
 	}
 	
 	public List<String> getFieldNameList() {
