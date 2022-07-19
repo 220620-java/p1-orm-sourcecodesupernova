@@ -87,7 +87,7 @@ public class ORMSelectTest {
 		
 		/*Test*/
 		Assertions.assertEquals(expected, actual);
-	}
+	} 
 	
 	
 	
