@@ -8,17 +8,14 @@ public class ORMCreate implements ORMInterface{
 	/*Class Variables*/
 	private Object obj = null;
 	private Class objClass = null;
-	
-	private void runSQLStatement(String sql) {
-		//TODO DataAccessObjects, Database
-	}
 
 	@Override
 	/*Writes a SQL create statement based on the object's fields*/
 	public String makeSQLStatement(Object o) {
 		/*Local Variables*/
-		String sql = "CREATE ";
+		String sql = "CREATE TABLE ";
 		String table = "";
+		int fkIndex = 0; // foreign key index
 		int index = 0;
 		List<String> fields = new ArrayList<>(),
 				dataTypes = new ArrayList<>(),
@@ -35,10 +32,11 @@ public class ORMCreate implements ORMInterface{
 			dataTypes = getTypes();
 			modifiers = getModifiers();
 			foreignReferences = getForeignReferences();
+			fkIndex = 0;
 			index = 0;
 			
 			//SQL Creation
-			sql += table + "(";
+			sql += table + " (";
 			for (String s: fields) {
 				sql += s + " " + dataTypes.get(index);
 				
@@ -46,27 +44,28 @@ public class ORMCreate implements ORMInterface{
 				if (modifiers.get(index) != null) {
 					
 					//Primary Keys already have UNIQUE and NOT NULL, so adding them is redundant if PRIMARY KEY is present
-					if (modifiers.get(index).contains("p")) {
+					if (modifiers.get(index).contains("PRIM")) {
 						sql += " PRIMARY KEY";
 					}
 					else {
-						if(modifiers.get(index).contains("u")) {
+						if(modifiers.get(index).contains("UNI")) {
 							sql += " UNIQUE";
 						}
-						if(modifiers.get(index).contains("n")) {
+						if(modifiers.get(index).contains("NOT")) {
 							sql += " NOT NULL";
 						}
 					}
 					
 					//Foreign Keys need to have a table to reference in order to be placed in the SQL query
-					if(modifiers.get(index).contains("f") && foreignReferences.get(index) != null) {
-						sql += " FOREIGN KEY REFERENCES " + foreignReferences.get(index);
+					if(modifiers.get(index).contains("FOREIGN") && foreignReferences.get(fkIndex) != null) {
+						sql += " REFERENCES " + foreignReferences.get(fkIndex);
+						fkIndex++;
 					}
 				}
 				
 				//Ends the SQL statement if there are no more fields to add, otherwise adds a comma
 				if (index == (fields.size() - 1)) {
-					sql += "); ";
+					sql += ");";
 				}
 				else {
 					sql += ", ";
@@ -76,6 +75,7 @@ public class ORMCreate implements ORMInterface{
 		}
 		catch (Exception e) {
 			//TODO Exception logger
+			e.printStackTrace();
 		}
 		
 		/*Return*/
