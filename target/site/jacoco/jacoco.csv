@@ -1,9 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-p1_SCS_ORM,com.revature.p1SCS.orm.services,ORMInsert,11,259,1,9,3,59,1,12,0,8
-p1_SCS_ORM,com.revature.p1SCS.orm.services,ORMUpdate,1,290,0,8,1,64,0,14,0,10
-p1_SCS_ORM,com.revature.p1SCS.orm.services,ORMSelect,1,270,0,10,1,60,0,14,0,9
-p1_SCS_ORM,com.revature.p1SCS.orm.services,ORMDelete,17,204,0,4,5,47,1,10,1,8
-p1_SCS_ORM,com.revature.p1SCS.orm.services,ORMCreate,1,295,2,14,1,66,2,15,0,9
-p1_SCS_ORM,com.revature.p1SCS.orm.models,Query,27,92,0,0,9,32,9,12,9,12
-p1_SCS_ORM,com.revature.p1SCS.orm.data,ORMDAO,110,108,6,0,28,32,3,5,0,5
-p1_SCS_ORM,com.revature.p1SCS.util,SQLConnect,6,25,1,1,2,10,1,2,0,2
