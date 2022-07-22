@@ -20,7 +20,9 @@ public class SQLConnect {
 	public Connection getConnection() {
 		/*Local Variables*/
 		Connection conn = null;
-		String url, username, password;
+		String url;
+		String username;
+		String password;
 		
 		/*Function*/
 		try {
@@ -31,7 +33,7 @@ public class SQLConnect {
 			conn = DriverManager.getConnection(url, username, password);
 		}
 		catch (Exception e) {
-			//TODO Exception Logger
+			//Exception Logger
 		}
 		return conn;
 	}

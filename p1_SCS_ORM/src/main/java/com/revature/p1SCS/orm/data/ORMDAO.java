@@ -22,7 +22,13 @@ public class ORMDAO {
 	private ORMSelect ormSel = new ORMSelect();
 	private ORMUpdate ormUpd = new ORMUpdate();
 	
-	
+	/**
+	 * Executes a delete SQL statement based on information of 
+	 * the obj being passed
+	 * 
+	 * @param obj Object whose info is being passed to SQL delete statement
+	 * @return returns 1 if statement is sucessful, otherwise 0
+	 */
 	public int delete(Query obj) {
 		/*Local Variables*/
 		String sql = "";
@@ -33,17 +39,22 @@ public class ORMDAO {
 			sql = ormDel.makeSQLStatement(obj);
 			PreparedStatement stmt =  conn.prepareStatement(sql);
 			result = stmt.executeUpdate();
-			conn.close();
+			stmt.close(); // don't know if this is necessary
 		}
 		catch (Exception e){
-			//TODO Exception Logger
-			e.printStackTrace();
+			//Exception Logger
+			//e.printStackTrace();
 		}
-		/*Return*/
 		return result;
 	}
 
-	
+	/**
+	 * Executes an insert SQL statement based on information
+	 * being passed by the obj
+	 * 
+	 * @param obj Object whose info is being translated to a SQL statement
+	 * @return returns 1 if statement is sucessful, otherwise 0
+	 */
 	public int insert(Query obj) {
 		/*Local Variables*/
 		String sql = "";
@@ -55,17 +66,23 @@ public class ORMDAO {
 			sql = ormIns.makeSQLStatement(obj);
 			PreparedStatement stmt =  conn.prepareStatement(sql, keys);
 			result = stmt.executeUpdate();
-			conn.close();
+			//stmt.close();
 		}
 		catch (Exception e){
-			//TODO Exception Logger
-			e.printStackTrace();
+			//Exception Logger
+			//e.printStackTrace();
 		}
 		/*Return*/
 		return result;
 	}
 	
-
+	/**
+	 * Executes a select SQL statement based on information
+	 * being passed by the obj
+	 * 
+	 * @param obj Object whose info is being fetched by select statement
+	 * @return returns List of fields and values from database
+	 */
 	public List<Query> select(Query obj) {
 		/*Local Variables*/
 		String sql = "";
@@ -73,8 +90,8 @@ public class ORMDAO {
 		ResultSet result = null;
 		ResultSetMetaData resMeta = null;
 		List<Query> objList = null;
-		List<String> fields = new ArrayList<>(),
-				values = new ArrayList<>();;
+		List<String> fields = new ArrayList<>();
+		List<String> values = new ArrayList<>();
 		Query in = null;
 		
 		/*Function*/
@@ -82,7 +99,7 @@ public class ORMDAO {
 			sql = ormSel.makeSQLStatement(obj);
 			PreparedStatement stmt =  conn.prepareStatement(sql);
 			result = stmt.executeQuery();
-			objList = new ArrayList<Query>();
+			objList = new ArrayList<>();
 			
 			//Getting field names
 			resMeta = result.getMetaData();
@@ -103,18 +120,23 @@ public class ORMDAO {
 				in.setFieldValueList(values);
 				objList.add(in);
 			}
-			conn.close();
 		}
 		catch (Exception e){
 			//TODO Exception Logger
-			e.printStackTrace();
-			objList = new ArrayList<Query>();
+			//e.printStackTrace();
+			objList = new ArrayList<>();
 		}
 		/*Return*/
 		return objList;
 	}
 	
-
+	/**
+	 * Executes update SQL statement based on information
+	 * being passed by the obj
+	 * 
+	 * @param obj Object whose info is being translated to a SQL statement
+	 * @return returns 1 if statement is sucessful, otherwise 0
+	 */
 	public int update(Query obj) {
 		/*Local Variables*/
 		String sql = "";
@@ -125,10 +147,10 @@ public class ORMDAO {
 			sql = ormUpd.makeSQLStatement(obj);
 			PreparedStatement stmt =  conn.prepareStatement(sql);
 			result = stmt.executeUpdate();
-			conn.close();
+			//stmt.close();
 		}
 		catch (Exception e){
-			//TODO Exception Logger
+			//Exception Logger
 		}
 		/*Return*/
 		return result;

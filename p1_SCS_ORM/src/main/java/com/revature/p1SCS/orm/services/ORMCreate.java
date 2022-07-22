@@ -7,7 +7,7 @@ import java.util.List;
 public class ORMCreate implements ORMInterface{
 	/*Class Variables*/
 	private Object obj = null;
-	private Class objClass = null;
+	private Class<?> objClass = null;
 
 	@Override
 	/*Writes a SQL create statement based on the object's fields*/
@@ -43,7 +43,7 @@ public class ORMCreate implements ORMInterface{
 				//Adding modifiers if present
 				if (modifiers.get(index) != null) {
 					
-					//Primary Keys already have UNIQUE and NOT NULL, so adding them is redundant if PRIMARY KEY is present
+					//Primary Keys already have UNIQUE and NOT NULL, so adding them is redundant
 					if (modifiers.get(index).contains("PRIM")) {
 						sql += " PRIMARY KEY";
 					}
@@ -74,14 +74,23 @@ public class ORMCreate implements ORMInterface{
 			}
 		}
 		catch (Exception e) {
-			//TODO Exception logger
-			e.printStackTrace();
+			//Exception logger
+			//e.printStackTrace();
 		}
 		
 		/*Return*/
 		return sql;
 	}
 	
+	/**
+	 * Retrieves table name of the object accessed through reflection
+	 * 
+	 * @return a String of the table name
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	protected String getTableName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field tableName = objClass.getDeclaredField("tableName");
@@ -95,10 +104,20 @@ public class ORMCreate implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves fields of the object class through reflection
+	 * 
+	 * @return a List of the fields contained in the object class
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field fieldNameList = objClass.getDeclaredField("fieldNameList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		fieldNameList.setAccessible(true);
@@ -108,10 +127,20 @@ public class ORMCreate implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves the types of the fields accessed by reflection
+	 * 
+	 * @return a List of the types associated with the object class fields
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getTypes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field fieldTypeList = objClass.getDeclaredField("fieldTypeList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		fieldTypeList.setAccessible(true);
@@ -121,10 +150,20 @@ public class ORMCreate implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves the modifiers related to fields accessed through reflection
+	 * 
+	 * @return a List of the modifiers associated with object class fields
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getModifiers() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field fieldModifiersList = objClass.getDeclaredField("fieldModifiersList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		fieldModifiersList.setAccessible(true);
@@ -134,10 +173,20 @@ public class ORMCreate implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * Retrieves foreign key references related to the object class
+	 * 
+	 * @return a List of the foreign references associated with the object
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getForeignReferences() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field foreignReferenceList = objClass.getDeclaredField("foreignReferenceList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		foreignReferenceList.setAccessible(true);
@@ -147,11 +196,22 @@ public class ORMCreate implements ORMInterface{
 		return result;
 	}
 	
+	/**
+	 * The object whose class is being accessed and mapped to a
+	 * relational database
+	 * 
+	 * @param obj The object whose class is being accessed
+	 */
 	public void setObj(Object o) {
 		this.obj = o;
 	}
 	
-	public void setObjClass(Class c) {
+	/**
+	 * The object's class that is being accessed through reflection
+	 * 
+	 * @param objClass The class of the object being accessed through reflection
+	 */
+	public void setObjClass(Class<?> c) {
 		this.objClass = c;
 	}
 
