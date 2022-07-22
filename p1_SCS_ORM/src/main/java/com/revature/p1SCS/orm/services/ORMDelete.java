@@ -7,15 +7,14 @@ import java.util.List;
 public class ORMDelete implements ORMInterface{
 	/*Class Variables*/
 	private Object obj = null;
-	private Class objClass = null;
+	private Class<?> objClass = null;
 
 	@Override
 	public String makeSQLStatement(Object obj) {
 		String sql = "DELETE FROM ";
 		String table = "";
 		int index = 0;
-		List<String> fields = new ArrayList<>(),
-					 filters = new ArrayList<>(),
+		List<String> filters = new ArrayList<>(),
 					 argTypes = new ArrayList<>(),
 					 filterValues = new ArrayList<>();
 		
@@ -23,13 +22,10 @@ public class ORMDelete implements ORMInterface{
 			setObj(obj);
 			setObjClass(obj.getClass());
 			table = getTableName();
-			fields = getFields();
 			filters = getFilters();
 			argTypes = getArgTypes();
 			filterValues = getFilterValues();
-			index = 0;
 			
-			// DELETE FROM table WHERE filters (argTypes) filterValues;
 			sql += table;
 			
 			sql += " WHERE ";
@@ -45,9 +41,8 @@ public class ORMDelete implements ORMInterface{
 			
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
-		
 		
 		return sql;
 	}
@@ -83,10 +78,11 @@ public class ORMDelete implements ORMInterface{
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field fieldNameList = objClass.getDeclaredField("fieldNameList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		fieldNameList.setAccessible(true);
@@ -105,10 +101,11 @@ public class ORMDelete implements ORMInterface{
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getFilters() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field filterList = objClass.getDeclaredField("filterList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		filterList.setAccessible(true);
@@ -128,10 +125,11 @@ public class ORMDelete implements ORMInterface{
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getArgTypes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field argumentTypes = objClass.getDeclaredField("argumentTypes");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		argumentTypes.setAccessible(true);
@@ -150,10 +148,11 @@ public class ORMDelete implements ORMInterface{
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
+	@SuppressWarnings("unchecked")
 	protected List<String> getFilterValues() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		/*Local Variables*/
 		Field filterValueList = objClass.getDeclaredField("filterValueList");
-		List<String> result = new ArrayList<>();
+		List<String> result;
 		
 		/*Function*/
 		filterValueList.setAccessible(true);
@@ -178,7 +177,7 @@ public class ORMDelete implements ORMInterface{
 	 * 
 	 * @param objClass The class of the object being accessed through reflection
 	 */
-	public void setObjClass(Class objClass) {
+	public void setObjClass(Class<?> objClass) {
 		this.objClass = objClass;
 	}
 		

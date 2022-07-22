@@ -1,7 +1,5 @@
 package com.revature.p1SCS.orm.services;
 
-import java.util.List;
-
 public interface ORMInterface {
 	/**
 	 * Writes a SQL statement based on the object's fields

@@ -5,23 +5,25 @@ import java.util.List;
 
 public class Query {
 	/*General Variables*/
-	//All of the lists are meant to be parallel arrays. So when you set the value for one, make sure to set the others as well, even if its new ArrayList<>()
+	//All of the lists are meant to be parallel arrays. 
+	//So when you set the value for one, make sure to set the others as well, even if its new ArrayList<>()
 	private String tableName = "";
 	private List<String> fieldNameList = new ArrayList<>(),
 			fieldTypeList = new ArrayList<>(),
 			fieldValueList = new ArrayList<>(),
-			fieldModifiersList = new ArrayList<>(); //Will be a string of identifiers. 'p' for PK, 'u' for unique, 'n' for not new ArrayList<>(), 'f' for FK
+			fieldModifiersList = new ArrayList<>();
 	
 	/*Insert Statement Variables*/
 	private String[] keys = null;
 	
-	/*Create Statement Variables*/	
-	private List<String> foreignReferenceList = new ArrayList<>(); //This will be parallel with the others as well. Set to new ArrayList<>() if the field does not reference a foreign table
+	/*Create Statement Variables*/
+	//Set to new ArrayList<>() if the field does not reference a foreign table
+	private List<String> foreignReferenceList = new ArrayList<>();
 	
 	/*Where Clause Variables*/
 	private List<String> filterList = new ArrayList<>(),
 			filterValueList = new ArrayList<>(),
-			argumentTypes = new ArrayList<>(); //Will be LIKE, >, <, >=, <=, == 
+			argumentTypes = new ArrayList<>(); //includes LIKE, >, <, >=, <=, == 
 	
 	/*Getters, Setters. Adders*/
 	public String getTableName() {

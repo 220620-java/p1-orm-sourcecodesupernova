@@ -49,7 +49,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<!-- Everything under <build> is for generating code coverage reports with JaCoCo -->
 	<build>
 		<plugins>
