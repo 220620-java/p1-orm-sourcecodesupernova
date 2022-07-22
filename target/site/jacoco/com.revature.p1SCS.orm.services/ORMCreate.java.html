@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ORMCreate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p1_SCS_ORM</a> &gt; <a href="index.source.html" class="el_package">com.revature.p1SCS.orm.services</a> &gt; <span class="el_source">ORMCreate.java</span></div><h1>ORMCreate.java</h1><pre class="source lang-java linenums">package com.revature.p1SCS.orm.services;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L7">public class ORMCreate implements ORMInterface{</span>
+	/*Class Variables*/
+<span class="fc" id="L9">	private Object obj = null;</span>
+<span class="fc" id="L10">	private Class&lt;?&gt; objClass = null;</span>
+
+	@Override
+	/*Writes a SQL create statement based on the object's fields*/
+	public String makeSQLStatement(Object o) {
+		/*Local Variables*/
+<span class="fc" id="L16">		String sql = &quot;CREATE TABLE &quot;;</span>
+<span class="fc" id="L17">		String table = &quot;&quot;;</span>
+<span class="fc" id="L18">		int fkIndex = 0; // foreign key index</span>
+<span class="fc" id="L19">		int index = 0;</span>
+<span class="fc" id="L20">		List&lt;String&gt; fields = new ArrayList&lt;&gt;(),</span>
+<span class="fc" id="L21">				dataTypes = new ArrayList&lt;&gt;(),</span>
+<span class="fc" id="L22">				modifiers = new ArrayList&lt;&gt;(),</span>
+<span class="fc" id="L23">				foreignReferences = new ArrayList&lt;&gt;();</span>
+		
+		/*Function*/
+		try {
+			//Setting Variables
+<span class="fc" id="L28">			setObj(o);</span>
+<span class="fc" id="L29">			setObjClass(o.getClass());</span>
+<span class="fc" id="L30">			table = getTableName();</span>
+<span class="fc" id="L31">			fields = getFields();</span>
+<span class="fc" id="L32">			dataTypes = getTypes();</span>
+<span class="fc" id="L33">			modifiers = getModifiers();</span>
+<span class="fc" id="L34">			foreignReferences = getForeignReferences();</span>
+<span class="fc" id="L35">			fkIndex = 0;</span>
+<span class="fc" id="L36">			index = 0;</span>
+			
+			//SQL Creation
+<span class="fc" id="L39">			sql += table + &quot; (&quot;;</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">			for (String s: fields) {</span>
+<span class="fc" id="L41">				sql += s + &quot; &quot; + dataTypes.get(index);</span>
+				
+				//Adding modifiers if present
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">				if (modifiers.get(index) != null) {</span>
+					
+					//Primary Keys already have UNIQUE and NOT NULL, so adding them is redundant
+<span class="fc bfc" id="L47" title="All 2 branches covered.">					if (modifiers.get(index).contains(&quot;PRIM&quot;)) {</span>
+<span class="fc" id="L48">						sql += &quot; PRIMARY KEY&quot;;</span>
+<span class="fc" id="L49">					}</span>
+					else {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">						if(modifiers.get(index).contains(&quot;UNI&quot;)) {</span>
+<span class="fc" id="L52">							sql += &quot; UNIQUE&quot;;</span>
+						}
+<span class="fc bfc" id="L54" title="All 2 branches covered.">						if(modifiers.get(index).contains(&quot;NOT&quot;)) {</span>
+<span class="fc" id="L55">							sql += &quot; NOT NULL&quot;;</span>
+						}
+					}
+					
+					//Foreign Keys need to have a table to reference in order to be placed in the SQL query
+<span class="pc bpc" id="L60" title="1 of 4 branches missed.">					if(modifiers.get(index).contains(&quot;FOREIGN&quot;) &amp;&amp; foreignReferences.get(fkIndex) != null) {</span>
+<span class="fc" id="L61">						sql += &quot; REFERENCES &quot; + foreignReferences.get(fkIndex);</span>
+<span class="fc" id="L62">						fkIndex++;</span>
+					}
+				}
+				
+				//Ends the SQL statement if there are no more fields to add, otherwise adds a comma
+<span class="fc bfc" id="L67" title="All 2 branches covered.">				if (index == (fields.size() - 1)) {</span>
+<span class="fc" id="L68">					sql += &quot;);&quot;;</span>
+<span class="fc" id="L69">				}</span>
+				else {
+<span class="fc" id="L71">					sql += &quot;, &quot;;</span>
+				}
+<span class="fc" id="L73">				index++;</span>
+			}
+<span class="fc" id="L75">		}</span>
+<span class="nc" id="L76">		catch (Exception e) {</span>
+			//Exception logger
+			//e.printStackTrace();
+		}
+		
+		/*Return*/
+<span class="fc" id="L82">		return sql;</span>
+	}
+	
+	/**
+	 * Retrieves table name of the object accessed through reflection
+	 * 
+	 * @return a String of the table name
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	protected String getTableName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L96">		Field tableName = objClass.getDeclaredField(&quot;tableName&quot;);</span>
+<span class="fc" id="L97">		String result = &quot;&quot;;</span>
+		
+		/*Function*/
+<span class="fc" id="L100">		tableName.setAccessible(true);</span>
+<span class="fc" id="L101">		result = tableName.get(obj).toString();</span>
+		
+		/*Return*/
+<span class="fc" id="L104">		return result;</span>
+	}
+	
+	/**
+	 * Retrieves fields of the object class through reflection
+	 * 
+	 * @return a List of the fields contained in the object class
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	protected List&lt;String&gt; getFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L119">		Field fieldNameList = objClass.getDeclaredField(&quot;fieldNameList&quot;);</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L123">		fieldNameList.setAccessible(true);</span>
+<span class="fc" id="L124">		result = (List&lt;String&gt;) fieldNameList.get(obj);</span>
+		
+		/*Return*/
+<span class="fc" id="L127">		return result;</span>
+	}
+	
+	/**
+	 * Retrieves the types of the fields accessed by reflection
+	 * 
+	 * @return a List of the types associated with the object class fields
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	protected List&lt;String&gt; getTypes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L142">		Field fieldTypeList = objClass.getDeclaredField(&quot;fieldTypeList&quot;);</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L146">		fieldTypeList.setAccessible(true);</span>
+<span class="fc" id="L147">		result = (List&lt;String&gt;) fieldTypeList.get(obj);</span>
+		
+		/*Return*/
+<span class="fc" id="L150">		return result;</span>
+	}
+	
+	/**
+	 * Retrieves the modifiers related to fields accessed through reflection
+	 * 
+	 * @return a List of the modifiers associated with object class fields
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	protected List&lt;String&gt; getModifiers() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L165">		Field fieldModifiersList = objClass.getDeclaredField(&quot;fieldModifiersList&quot;);</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L169">		fieldModifiersList.setAccessible(true);</span>
+<span class="fc" id="L170">		result = (List&lt;String&gt;) fieldModifiersList.get(obj);</span>
+		
+		/*Return*/
+<span class="fc" id="L173">		return result;</span>
+	}
+	
+	/**
+	 * Retrieves foreign key references related to the object class
+	 * 
+	 * @return a List of the foreign references associated with the object
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	protected List&lt;String&gt; getForeignReferences() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L188">		Field foreignReferenceList = objClass.getDeclaredField(&quot;foreignReferenceList&quot;);</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L192">		foreignReferenceList.setAccessible(true);</span>
+<span class="fc" id="L193">		result = (List&lt;String&gt;) foreignReferenceList.get(obj);</span>
+		
+		/*Return*/
+<span class="fc" id="L196">		return result;</span>
+	}
+	
+	/**
+	 * The object whose class is being accessed and mapped to a
+	 * relational database
+	 * 
+	 * @param obj The object whose class is being accessed
+	 */
+	public void setObj(Object o) {
+<span class="fc" id="L206">		this.obj = o;</span>
+<span class="fc" id="L207">	}</span>
+	
+	/**
+	 * The object's class that is being accessed through reflection
+	 * 
+	 * @param objClass The class of the object being accessed through reflection
+	 */
+	public void setObjClass(Class&lt;?&gt; c) {
+<span class="fc" id="L215">		this.objClass = c;</span>
+<span class="fc" id="L216">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

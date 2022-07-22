@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ORMDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p1_SCS_ORM</a> &gt; <a href="index.source.html" class="el_package">com.revature.p1SCS.orm.data</a> &gt; <span class="el_source">ORMDAO.java</span></div><h1>ORMDAO.java</h1><pre class="source lang-java linenums">package com.revature.p1SCS.orm.data;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import com.revature.p1SCS.orm.models.Query;
+import com.revature.p1SCS.orm.services.ORMDelete;
+import com.revature.p1SCS.orm.services.ORMInsert;
+import com.revature.p1SCS.orm.services.ORMSelect;
+import com.revature.p1SCS.orm.services.ORMUpdate;
+
+import java.util.List;
+import com.revature.p1SCS.util.SQLConnect;
+import java.util.ArrayList;
+
+<span class="fc" id="L18">public class ORMDAO {</span>
+<span class="fc" id="L19">	private SQLConnect sqlConn = SQLConnect.getSQLConnect();</span>
+<span class="fc" id="L20">	private ORMDelete ormDel = new ORMDelete();</span>
+<span class="fc" id="L21">	private ORMInsert ormIns = new ORMInsert();	</span>
+<span class="fc" id="L22">	private ORMSelect ormSel = new ORMSelect();</span>
+<span class="fc" id="L23">	private ORMUpdate ormUpd = new ORMUpdate();</span>
+	
+	/**
+	 * Executes a delete SQL statement based on information of 
+	 * the obj being passed
+	 * 
+	 * @param obj Object whose info is being passed to SQL delete statement
+	 * @return returns 1 if statement is sucessful, otherwise 0
+	 */
+	public int delete(Query obj) {
+		/*Local Variables*/
+<span class="fc" id="L34">		String sql = &quot;&quot;;</span>
+<span class="fc" id="L35">		int result = -1;</span>
+		
+		/*Function*/
+<span class="fc" id="L38">		try (Connection conn = sqlConn.getConnection()){</span>
+<span class="fc" id="L39">			sql = ormDel.makeSQLStatement(obj);</span>
+<span class="nc" id="L40">			PreparedStatement stmt =  conn.prepareStatement(sql);</span>
+<span class="nc" id="L41">			result = stmt.executeUpdate();</span>
+<span class="nc" id="L42">			stmt.close(); // don't know if this is necessary</span>
+		}
+<span class="fc" id="L44">		catch (Exception e){</span>
+			//Exception Logger
+			//e.printStackTrace();
+		}
+<span class="fc" id="L48">		return result;</span>
+	}
+
+	/**
+	 * Executes an insert SQL statement based on information
+	 * being passed by the obj
+	 * 
+	 * @param obj Object whose info is being translated to a SQL statement
+	 * @return returns 1 if statement is sucessful, otherwise 0
+	 */
+	public int insert(Query obj) {
+		/*Local Variables*/
+<span class="fc" id="L60">		String sql = &quot;&quot;;</span>
+<span class="nc" id="L61">		String[] keys = obj.getKeys();</span>
+<span class="nc" id="L62">		int result = -1;</span>
+		
+		/*Function*/
+<span class="nc" id="L65">		try (Connection conn = sqlConn.getConnection()){</span>
+<span class="nc" id="L66">			sql = ormIns.makeSQLStatement(obj);</span>
+<span class="nc" id="L67">			PreparedStatement stmt =  conn.prepareStatement(sql, keys);</span>
+<span class="nc" id="L68">			result = stmt.executeUpdate();</span>
+			//stmt.close();
+		}
+<span class="nc" id="L71">		catch (Exception e){</span>
+			//Exception Logger
+			//e.printStackTrace();
+		}
+		/*Return*/
+<span class="nc" id="L76">		return result;</span>
+	}
+	
+	/**
+	 * Executes a select SQL statement based on information
+	 * being passed by the obj
+	 * 
+	 * @param obj Object whose info is being fetched by select statement
+	 * @return returns List of fields and values from database
+	 */
+	public List&lt;Query&gt; select(Query obj) {
+		/*Local Variables*/
+<span class="fc" id="L88">		String sql = &quot;&quot;;</span>
+<span class="fc" id="L89">		int columns = 0;</span>
+<span class="fc" id="L90">		ResultSet result = null;</span>
+<span class="fc" id="L91">		ResultSetMetaData resMeta = null;</span>
+<span class="fc" id="L92">		List&lt;Query&gt; objList = null;</span>
+<span class="fc" id="L93">		List&lt;String&gt; fields = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L94">		List&lt;String&gt; values = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L95">		Query in = null;</span>
+		
+		/*Function*/
+<span class="fc" id="L98">		try (Connection conn = sqlConn.getConnection()){</span>
+<span class="fc" id="L99">			sql = ormSel.makeSQLStatement(obj);</span>
+<span class="nc" id="L100">			PreparedStatement stmt =  conn.prepareStatement(sql);</span>
+<span class="nc" id="L101">			result = stmt.executeQuery();</span>
+<span class="nc" id="L102">			objList = new ArrayList&lt;&gt;();</span>
+			
+			//Getting field names
+<span class="nc" id="L105">			resMeta = result.getMetaData();</span>
+<span class="nc" id="L106">			columns = resMeta.getColumnCount();</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">			for(int i = 1; i &lt;= columns; i++) {</span>
+<span class="nc" id="L108">				fields.add(resMeta.getColumnName(i));</span>
+			}
+			
+			//Getting values from query and adding to an object
+<span class="nc bnc" id="L112" title="All 2 branches missed.">			while(result.next()) {</span>
+<span class="nc" id="L113">				values = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L114">				in = new Query();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">				for (int i = 1; i &lt;= columns; i++) {</span>
+<span class="nc" id="L116">					values.add(result.getString(i));</span>
+				}
+				
+<span class="nc" id="L119">				in.setFieldNameList(fields);</span>
+<span class="nc" id="L120">				in.setFieldValueList(values);</span>
+<span class="nc" id="L121">				objList.add(in);</span>
+			}
+		}
+<span class="fc" id="L124">		catch (Exception e){</span>
+			//TODO Exception Logger
+			//e.printStackTrace();
+<span class="fc" id="L127">			objList = new ArrayList&lt;&gt;();</span>
+		}
+		/*Return*/
+<span class="fc" id="L130">		return objList;</span>
+	}
+	
+	/**
+	 * Executes update SQL statement based on information
+	 * being passed by the obj
+	 * 
+	 * @param obj Object whose info is being translated to a SQL statement
+	 * @return returns 1 if statement is sucessful, otherwise 0
+	 */
+	public int update(Query obj) {
+		/*Local Variables*/
+<span class="fc" id="L142">		String sql = &quot;&quot;;</span>
+<span class="fc" id="L143">		int result = -1;</span>
+		
+		/*Function*/
+<span class="fc" id="L146">		try (Connection conn = sqlConn.getConnection()){</span>
+<span class="fc" id="L147">			sql = ormUpd.makeSQLStatement(obj);</span>
+<span class="nc" id="L148">			PreparedStatement stmt =  conn.prepareStatement(sql);</span>
+<span class="nc" id="L149">			result = stmt.executeUpdate();</span>
+			//stmt.close();
+		}
+<span class="fc" id="L152">		catch (Exception e){</span>
+			//Exception Logger
+		}
+		/*Return*/
+<span class="fc" id="L156">		return result;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ORMInsert.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p1_SCS_ORM</a> &gt; <a href="index.source.html" class="el_package">com.revature.p1SCS.orm.services</a> &gt; <span class="el_source">ORMInsert.java</span></div><h1>ORMInsert.java</h1><pre class="source lang-java linenums">package com.revature.p1SCS.orm.services;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+<span class="fc" id="L8">public class ORMInsert implements ORMInterface{</span>
+	/*Class Variables*/
+<span class="fc" id="L10">	private Object obj = null;</span>
+<span class="fc" id="L11">	private Class&lt;?&gt; objClass = null;</span>
+
+	@Override
+	/*Writes a SQL create statement based on the object's fields*/
+	public String makeSQLStatement(Object o) {
+		/*Local Variables*/
+<span class="fc" id="L17">		String sql = &quot;INSERT INTO &quot;;</span>
+<span class="fc" id="L18">		String table = &quot;&quot;;</span>
+<span class="fc" id="L19">		int index = 0;</span>
+<span class="fc" id="L20">		List&lt;String&gt; fields = new ArrayList&lt;&gt;(),</span>
+<span class="fc" id="L21">				     keys = new ArrayList&lt;&gt;(),</span>
+<span class="fc" id="L22">				     values = new ArrayList&lt;&gt;();</span>
+		
+		/*Function*/
+		try {
+			//Setting Variables
+<span class="fc" id="L27">			setObj(o);</span>
+<span class="fc" id="L28">			setObjClass(o.getClass());</span>
+<span class="fc" id="L29">			keys = getKeys();</span>
+<span class="fc" id="L30">			table = getTableName();</span>
+<span class="fc" id="L31">			fields = getFields();</span>
+<span class="fc" id="L32">			values = getValues();</span>
+<span class="fc" id="L33">			index = 0;</span>
+			
+			//SQL Creation
+<span class="fc" id="L36">			sql += table + &quot;(&quot;;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">			for (String s: fields) {</span>
+<span class="fc" id="L38">				sql += s;</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">				if(index == (fields.size() - 1)) {</span>
+<span class="fc" id="L40">					sql += &quot;) &quot;;</span>
+<span class="fc" id="L41">				}</span>
+				else{
+<span class="fc" id="L43">					sql += &quot;, &quot;;</span>
+				}
+<span class="fc" id="L45">				index++;</span>
+			}
+			
+<span class="fc" id="L48">			sql += &quot;VALUES(&quot;;</span>
+<span class="fc" id="L49">			index = 0;</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">			for (String s: values) {</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">				if (keys.contains(fields.get(index))) { //The field is meant to be set automatically</span>
+<span class="nc" id="L52">					sql += &quot;default&quot;;</span>
+<span class="nc" id="L53">				}</span>
+				else {
+<span class="fc" id="L55">					sql += &quot;'&quot; + s + &quot;'&quot;;</span>
+				}
+<span class="fc bfc" id="L57" title="All 2 branches covered.">				if(index == (values.size() - 1)) {</span>
+<span class="fc" id="L58">					sql += &quot;);&quot;;</span>
+<span class="fc" id="L59">				}</span>
+				else{
+<span class="fc" id="L61">					sql += &quot;, &quot;;</span>
+				}
+<span class="fc" id="L63">				index++;</span>
+			}
+<span class="fc" id="L65">		}</span>
+<span class="nc" id="L66">		catch (Exception e) {</span>
+			//e.printStackTrace();
+			//Exception logger
+		}
+		
+		/*Return*/
+<span class="fc" id="L72">		return sql;</span>
+	}
+	
+	/**
+	 * Retrieves keys associated with object class
+	 * 
+	 * @return a List of keys related to object class
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	protected List&lt;String&gt; getKeys() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L86">		Field keys = objClass.getDeclaredField(&quot;keys&quot;);</span>
+<span class="fc" id="L87">		String[] value = {&quot;&quot;};</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L91">		keys.setAccessible(true);</span>
+<span class="fc" id="L92">		value = (String[]) keys.get(obj);</span>
+		
+//		for (String s : value) {
+//			result.add(s);
+//		}
+<span class="fc" id="L97">		result = Arrays.asList(value);</span>
+		
+		/*Return*/
+<span class="fc" id="L100">		return result;</span>
+	}
+	
+	/**
+	 * Retrieves table name of the object accessed through reflection
+	 * 
+	 * @return a String of the table name
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	protected String getTableName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L114">		Field tableName = objClass.getDeclaredField(&quot;tableName&quot;);</span>
+<span class="fc" id="L115">		String result = &quot;&quot;;</span>
+		
+		/*Function*/
+<span class="fc" id="L118">		tableName.setAccessible(true);</span>
+<span class="fc" id="L119">		result = tableName.get(obj).toString();</span>
+		
+		/*Return*/
+<span class="fc" id="L122">		return result;</span>
+	}
+
+	/**
+	 * Retrieves fields of the object class through reflection
+	 * 
+	 * @return a List of the fields contained in the object class
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	protected List&lt;String&gt; getFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L137">		Field fieldNameList = objClass.getDeclaredField(&quot;fieldNameList&quot;);</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L141">		fieldNameList.setAccessible(true);</span>
+<span class="fc" id="L142">		result = (List&lt;String&gt;) fieldNameList.get(obj);</span>
+		
+		/*Return*/
+<span class="fc" id="L145">		return result;</span>
+	}
+	
+	/**
+	 * Retrieves values related to object fields
+	 * 
+	 * @return a List of values associated with fields
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	protected List&lt;String&gt; getValues() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		/*Local Variables*/
+<span class="fc" id="L160">		Field fieldValueList = objClass.getDeclaredField(&quot;fieldValueList&quot;);</span>
+		List&lt;String&gt; result;
+		
+		/*Function*/
+<span class="fc" id="L164">		fieldValueList.setAccessible(true);</span>
+<span class="fc" id="L165">		result = (List&lt;String&gt;) fieldValueList.get(obj);</span>
+		
+		/*Return*/
+<span class="fc" id="L168">		return result;</span>
+	}
+	
+	/**
+	 * The object whose class is being accessed and mapped to a
+	 * relational database
+	 * 
+	 * @param obj The object whose class is being accessed
+	 */
+	public void setObj(Object o) {
+<span class="fc" id="L178">		this.obj = o;</span>
+<span class="fc" id="L179">	}</span>
+	
+	/**
+	 * The object's class that is being accessed through reflection
+	 * 
+	 * @param objClass The class of the object being accessed through reflection
+	 */
+	public void setObjClass(Class&lt;?&gt; c) {
+<span class="fc" id="L187">		this.objClass = c;</span>
+<span class="fc" id="L188">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

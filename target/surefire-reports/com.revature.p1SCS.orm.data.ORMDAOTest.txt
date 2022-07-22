@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: com.revature.p1SCS.orm.data.ORMDAOTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 2, Errors: 2, Skipped: 0, Time elapsed: 34.497 s <<< FAILURE! - in com.revature.p1SCS.orm.data.ORMDAOTest
+deleteORMDAOTest  Time elapsed: 14.291 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <1> but was: <-1>
+	at com.revature.p1SCS.orm.data.ORMDAOTest.deleteORMDAOTest(ORMDAOTest.java:75)
+
+updateORMDAOTest  Time elapsed: 10.006 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at com.revature.p1SCS.orm.data.ORMDAOTest.updateORMDAOTest(ORMDAOTest.java:168)
+
+insertORMDAOTestv2  Time elapsed: 0.005 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.revature.p1SCS.orm.models.Query.getKeys()" because "obj" is null
+	at com.revature.p1SCS.orm.data.ORMDAOTest.insertORMDAOTestv2(ORMDAOTest.java:110)
+
+insertORMDAOTest  Time elapsed: 0.004 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.revature.p1SCS.orm.models.Query.getKeys()" because "obj" is null
+	at com.revature.p1SCS.orm.data.ORMDAOTest.insertORMDAOTest(ORMDAOTest.java:90)
+
